@@ -40,19 +40,30 @@ jobs:
         run: |
           $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -accel off &
           adb wait-for-device
-          adb shell settings put global window_animation_scale 0 &
-          adb shell settings put global transition_animation_scale 0 &
-          adb shell settings put global animator_duration_scale 0 &
+#          adb shell settings put global window_animation_scale 0 &
+#          adb shell settings put global transition_animation_scale 0 &
+#          adb shell settings put global animator_duration_scale 0 &
         timeout-minutes: 60
 
       - name: Wait for Emulator to be Ready
         run: |
           boot_completed=""
-          until [ "$boot_completed" = "1" ]; do
+          device_booted=""
+          while [ "$boot_completed" != "1" ] || [ "$device_booted" != "device" ]; do
             boot_completed=$(adb shell getprop sys.boot_completed 2>&1)
-            sleep 1
+            device_booted=$(adb get-state)
+            echo "Waiting for emulator to boot..."
+            sleep 5
           done
           echo "Emulator is ready"
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+#          until [ "$boot_completed" = "1" ]; do
+#            boot_completed=$(adb shell getprop sys.boot_completed 2>&1)
+#            sleep 1
+#          done
+#          echo "Emulator is ready"
 
       - name: Run tests
         run: ./gradlew connectedDebugAndroidTest
