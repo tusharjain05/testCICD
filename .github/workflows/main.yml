@@ -49,6 +49,12 @@ jobs:
             echo "APK_NAME=testing_standalone_watch_application.apk" >> $GITHUB_ENV
           elif [ "${{ github.ref_name }}" == "master" ]; then
             echo "APK_NAME=release_standalone_watch_application.apk" >> $GITHUB_ENV
+          shell: /usr/bin/bash -e {0}
+          env:
+            JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.11-9/x64
+            JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.11-9/x64
+            ANDROID_AVD_HOME: /home/runner/.android/avd
+
 
       - name: Development APK
         if: github.ref == 'refs/heads/main'
