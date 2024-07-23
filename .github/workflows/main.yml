@@ -31,14 +31,14 @@ jobs:
         run: sdkmanager "emulator"
 
       - name: Install System Image
-        run: sdkmanager "system-images;android-30;google_apis;x86"
+        run: sdkmanager "system-images;android-31;google_apis;x86"
 
       - name: Create AVD
         run: echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86" --force
 
       - name: Start Emulator
         run: |
-          $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -accel off &
+          $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -gpu off -accel off -verbose &
           adb wait-for-device
 #          adb shell settings put global window_animation_scale 0 &
 #          adb shell settings put global transition_animation_scale 0 &
@@ -52,6 +52,7 @@ jobs:
           while [ "$boot_completed" != "1" ] || [ "$device_booted" != "device" ]; do
             boot_completed=$(adb shell getprop sys.boot_completed 2>&1)
             device_booted=$(adb get-state)
+            echo "Waiting for emulator to boot... boot_completed=$boot_completed, device_booted=$device_booted"
             echo "Waiting for emulator to boot..."
             sleep 5
           done
