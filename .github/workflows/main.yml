@@ -41,6 +41,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-test-results
+          path: app/build/reports/androidTests/connected/
+
+          
       - name: Set APK Name
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
