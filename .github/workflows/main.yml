@@ -31,7 +31,7 @@ jobs:
         run: sdkmanager "emulator"
 
       - name: Install System Image
-        run: sdkmanager "system-images;android-31;google_apis;x86"
+        run: sdkmanager "system-images;android-30;google_apis;x86"
 
       - name: Create AVD
         run: echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86" --force
